@@ -1,0 +1,19 @@
+# Django specific files
+*.log
+*.pot
+*.pyc
+__pycache__/
+
+# Crucial: Ignore your database file
+db.sqlite3
+
+# Crucial: Ignore virtual environment folder
+venv/
+env/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Files often containing secrets (you may not have this yet)
+local_settings.py
