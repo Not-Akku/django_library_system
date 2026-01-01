@@ -25,6 +25,7 @@ class Loan(models.Model):
     reader = models.ForeignKey(Reader, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     loan_date = models.DateField(auto_now_add=True)
+    due_date = models.DateField(null=True)
     return_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
