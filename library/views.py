@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from . forms import LendingForm
+from . forms import LendingForm , ReturnSystem
 from . models import Reader, Loan, Book
 from django.contrib import messages
 from django.utils import timezone
@@ -49,3 +49,16 @@ def lend(request):
             
 
     return render(request, 'lib/lend.html', {'form': form})
+
+def return_book(request):
+    if request.method == 'POST':
+        form = ReturnSystem(request.POST)
+        if form.is_valid():
+            book_id = form.cleaned_data['book_id']
+            try:
+                loan_available = Loan.objects.get(
+                    book = book_id,
+                    return_date__isnull = True
+                )
+            except:
+                messages.error(request, f"there is no book with {book_id}")
