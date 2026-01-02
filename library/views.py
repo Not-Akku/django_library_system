@@ -60,5 +60,12 @@ def return_book(request):
                     book = book_id,
                     return_date__isnull = True
                 )
+
+                loan_available.return_date = timezone.now() # will update the return date
+                loan_available.save()
+
+                book_available_update = Book.objects.get(book_id) # update the book availability in book db
+                book_available_update.available_for_loan = True
+                book_available_update.save()
             except:
                 messages.error(request, f"there is no book with {book_id}")
