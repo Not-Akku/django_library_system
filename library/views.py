@@ -7,6 +7,7 @@ from datetime import timedelta #to calculate due date...
 
 # Create your views here.
 
+# view logics for leading book 
 def lend(request):
     form = LendingForm()
 
@@ -51,21 +52,26 @@ def lend(request):
     return render(request, 'lib/lend.html', {'form': form})
 
 def return_book(request):
+    form = ReturnSystem()
     if request.method == 'POST':
         form = ReturnSystem(request.POST)
         if form.is_valid():
             book_id = form.cleaned_data['book_id']
             try:
-                loan_available = Loan.objects.get(
-                    book = book_id,
+                # check the loans db with the same id and recent loan.
+                loan = Loan.objects.get(
+                    book_id = book_id,
                     return_date__isnull = True
                 )
-
-                loan_available.return_date = timezone.now() # will update the return date
-                loan_available.save()
-
-                book_available_update = Book.objects.get(book_id) # update the book availability in book db
-                book_available_update.available_for_loan = True
-                book_available_update.save()
+                
+                # mark loan returned
+                loan.return_date = timezone.now()
+                loan.save()
+                # update the book availability in book db
+                book = loan.book
+                book.available_for_loan = True
+                book.save()
             except:
-                messages.error(request, f"there is no book with {book_id}")
+                messages.error(request, f"there is no book with {book_id} book id.")
+    return render(request, 'lib/return.html', {'form': form})
+

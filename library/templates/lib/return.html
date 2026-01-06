@@ -1,0 +1,22 @@
+<h1>Return page</h1>
+
+{% comment %} This is the Django template code to display any messages {% endcomment %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li>
+                
+                {{ message }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% comment %} End of messages display {% endcomment %}
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{form}}
+
+    <button type="submit">Return</button>
+</form>
+

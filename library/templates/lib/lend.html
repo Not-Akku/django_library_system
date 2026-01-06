@@ -1,6 +1,15 @@
-<h1>lending system</h1>
 
-{% comment %} This is the Django template code to display any messages {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    </html><h1>lending system</h1>
+
+    {% comment %} This is the Django template code to display any messages {% endcomment %}
 {% if messages %}
     <ul class="messages">
         {% for message in messages %}
@@ -19,3 +28,6 @@
 
     <button type="submit">Submit</button>
 </form>
+
+<a href="{% url 'return' %}">Return page</a>
+</body>
