@@ -67,21 +67,22 @@ def return_book(request):
                     book_id = book_id,
                     return_date__isnull = True
                 )
-                today = timezone.now()
+                today = timezone.now().date()
                 due_date = loan.due_date
 
                 if today > due_date:
-                    overdue = today - due_date
+                    time_difference = today - due_date
+                    overdue = time_difference.days
                     fine_interest = overdue * 0.5
                     total_fine = fine_interest + 25
 
-                    Reader.objects.create(
-                        fine_pending = total_fine
-                    )
-                
-                if Reader.fine_pending > 0:
-                    messages.error(request, "sorry you have some fines pending!")
+                    reader = loan.reader
+                    reader.fine_pending += total_fine
+                    reader.save()
+            
                 else:
+
+                    messages.error(request)
                     # mark loan returned
                     loan.return_date = timezone.now()
                     loan.save()
@@ -89,8 +90,16 @@ def return_book(request):
                     book = loan.book
                     book.available_for_loan = True
                     book.save()
-            except:
-                messages.error(request, f"there is no book with {book_id} book id.")
-    return render(request, 'lib/return.html', {'form': form})
-# return page is done 
 
+            except Loan.DoesNotExist:
+                messages.error(request, f"No active loan found for book ID {book_id}")
+
+            except Exception as e:
+                messages.error(request, f"An unexpected error occured: {e}")
+
+    return render(request, 'lib/return.html', {'form': form})
+
+
+
+def fine(request):
+    pass
