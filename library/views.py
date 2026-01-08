@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from . forms import LendingForm , ReturnSystem
+from . forms import LendingForm , ReturnSystem, fineSystem
 from . models import Reader, Loan, Book
 from django.contrib import messages
 from django.utils import timezone
@@ -102,4 +102,8 @@ def return_book(request):
 
 
 def fine(request):
-    pass
+    form = fineSystem()
+    if request.method == 'POST':
+        form = fineSystem(request.POST)
+        if form.is_valid():
+            fine = form.cleaned_data['fine']

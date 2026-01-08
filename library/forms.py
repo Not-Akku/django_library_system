@@ -8,4 +8,6 @@ class LendingForm(forms.Form):
 
 class ReturnSystem(forms.Form):
     book_id = forms.IntegerField()
+
+class fineSystem(forms.Form):
     fine = forms.IntegerField()
