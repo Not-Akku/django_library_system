@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,13 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4ramb$iu#rc9v0&9frdu)6-j(w@y3nfa&7k)77dcszdgxrek9!'
+SECRET_KEY = os.environ.get('SECRET_KEY')
+if not SECRET_KEY:
+    if os.environ.get('DEBUG', 'True').lower() == 'true':
+        SECRET_KEY = 'django-insecure-4ramb$iu#rc9v0&9frdu)6-j(w@y3nfa&7k)77dcszdgxrek9!'
+    else:
+        raise ValueError('SECRET_KEY environment variable must be set for production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
